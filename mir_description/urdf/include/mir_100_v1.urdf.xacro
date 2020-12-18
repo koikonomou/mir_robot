@@ -5,7 +5,7 @@
   <xacro:include filename="$(find mir_description)/urdf/include/mir_100.gazebo.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/mir_100.transmission.xacro" />
   <xacro:include filename="$(find mir_description)/urdf/include/sick_s300.urdf.xacro" />
-
+  <xacro:include filename="$(find mir_description)/urdf/include/_d415.urdf.xacro" />
   <xacro:property name="deg_to_rad" value="0.017453293" />
 
   <xacro:property name="mir_100_base_mass" value="58.0" />
@@ -218,6 +218,46 @@
     </joint>
 
     <link name="${prefix}us_2_frame" />
+  <!-- Depth Camera sensors -->
+    <joint name="${prefix}camera_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}camera_frame" />
+      <origin xyz="0.45 0 0.28 " rpy="0 0 0" />
+    </joint>
+
+    <joint name="${prefix}depth_camera_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}depth_camera_frame" />
+      <origin xyz="0.45 0 0.28 " rpy="${-pi/2} 0 ${-pi/2}" />
+    </joint>
+
+    <link name="${prefix}depth_camera_frame" />
+
+    <xacro:d_camera prefix="${prefix}" link="camera_frame" topic="/camera"/>
+    
+    <!-- UV light -->
+
+    <joint name="${prefix}uv_light_joint" type="fixed">
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}uv_link" />
+      <origin xyz="0 0 0.71 " rpy="0 0 ${pi/2}" />
+    </joint>
+
+    <link name="${prefix}uv_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://roboskel_ros_resources/gazebo/models/fluorescent_lamp/meshes/fl.stl" />
+        </geometry>
+        <xacro:insert_block name="material_white" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://roboskel_ros_resources/gazebo/models/fluorescent_lamp/meshes/fl.stl" />
+        </geometry>
+      </collision>
+    </link>
 
     <!-- wheels -->
     <xacro:actuated_wheel prefix="${prefix}" locationprefix="left" locationright="-1"/>

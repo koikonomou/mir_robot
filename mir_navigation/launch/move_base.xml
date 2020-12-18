@@ -12,15 +12,15 @@
         <!-- global costmap params -->
         <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" subst_value="true" />
         <rosparam file="$(find mir_navigation)/config/costmap_global_params.yaml" command="load" />
-        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_virtual_walls.yaml" command="load" if="$(arg with_virtual_walls)" />
-        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_no_virtual_walls.yaml" command="load" unless="$(arg with_virtual_walls)" />
+        <!--<rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_virtual_walls.yaml" command="load" if="$(arg with_virtual_walls)" />
+        <rosparam file="$(find mir_navigation)/config/costmap_global_params_plugins_no_virtual_walls.yaml" command="load" unless="$(arg with_virtual_walls)" /> -->
         <!-- local costmap params -->
         <rosparam file="$(find mir_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" subst_value="true" />
         <rosparam file="$(find mir_navigation)/config/costmap_local_params.yaml" command="load" subst_value="true" />
-        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_virtual_walls.yaml" command="load" if="$(arg with_virtual_walls)" />
-        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_no_virtual_walls.yaml" command="load" unless="$(arg with_virtual_walls)" />
+        <!--<rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_virtual_walls.yaml" command="load" if="$(arg with_virtual_walls)" />
+        <rosparam file="$(find mir_navigation)/config/costmap_local_params_plugins_no_virtual_walls.yaml" command="load" unless="$(arg with_virtual_walls)" /> -->
         <remap from="map" to="/map" />
-        <remap from="odom" to="odom_comb" />
+        <remap from="odom" to="odom" />
         <remap from="marker" to="move_base_node/DWBLocalPlanner/markers" />
     </node>
 </launch>

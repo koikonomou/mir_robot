@@ -11,16 +11,17 @@ from rospy_message_converter import message_converter
 from actionlib_msgs.msg import GoalID, GoalStatusArray
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus
 from dynamic_reconfigure.msg import Config, ConfigDescription
-from geometry_msgs.msg import PolygonStamped, Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped, Twist
+from geometry_msgs.msg import PolygonStamped, Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped, Twist, TwistStamped
 from mir_actions.msg import *
 from mir_msgs.msg import *
 from move_base_msgs.msg import MoveBaseActionFeedback, MoveBaseActionGoal, MoveBaseActionResult, MoveBaseFeedback, MoveBaseResult
 from nav_msgs.msg import GridCells, MapMetaData, OccupancyGrid, Odometry, Path
 from rosgraph_msgs.msg import Log
 from sdc21x0.msg import MotorCurrents
-from sensor_msgs.msg import Imu, LaserScan, PointCloud2, Range
+from sensor_msgs.msg import Imu, LaserScan, PointCloud2, Range,  Image, CompressedImage, CameraInfo
 from std_msgs.msg import Float64, String
 from tf.msg import tfMessage
+from tf2_msgs.msg import TFMessage
 from visualization_msgs.msg import Marker, MarkerArray
 
 tf_prefix = ''
@@ -111,16 +112,56 @@ PUB_TOPICS = [
               TopicConfig('amcl_pose', PoseWithCovarianceStamped),
               TopicConfig('b_raw_scan', LaserScan),
               TopicConfig('b_scan', LaserScan),
-              TopicConfig('camera_floor/background', PointCloud2),
-              TopicConfig('camera_floor/depth/parameter_descriptions', ConfigDescription),
-              TopicConfig('camera_floor/depth/parameter_updates', Config),
-              TopicConfig('camera_floor/depth/points', PointCloud2),
-              TopicConfig('camera_floor/filter/parameter_descriptions', ConfigDescription),
-              TopicConfig('camera_floor/filter/parameter_updates', Config),
-              TopicConfig('camera_floor/floor', PointCloud2),
-              TopicConfig('camera_floor/obstacles', PointCloud2),
-              TopicConfig('camera_floor/transform/parameter_descriptions', ConfigDescription),
-              TopicConfig('camera_floor/transform/parameter_updates', Config),
+              TopicConfig('camera_floor_left/background', PointCloud2),
+              TopicConfig('camera_floor_left/driver/color/camera_info', CameraInfo),
+              TopicConfig('camera_floor_left/driver/color/image_raw', Image),
+              TopicConfig('camera_floor_left/driver/color/image_raw/compressed', CompressedImage),
+              TopicConfig('camera_floor_left/driver/color/image_raw/compressed/parameter_descriptions', ConfigDescription),
+              TopicConfig('camera_floor_left/driver/color/image_raw/compressed/parameter_updates', Config),
+              TopicConfig('camera_floor_left/driver/depth/camera_info', CameraInfo),
+              TopicConfig('camera_floor_left/driver/depth/color/points', PointCloud2),
+              TopicConfig('camera_floor_left/driver/depth/image_rect_raw', Image),
+              TopicConfig('camera_floor_left/driver/depth/image_rect_raw/compressed', CompressedImage),
+              TopicConfig('camera_floor_left/driver/depth/image_rect_raw/compressed/parameter_descriptions', ConfigDescription),
+              TopicConfig('camera_floor_left/driver/depth/image_rect_raw/compressed/parameter_updates', Config),
+              TopicConfig('camera_floor_left/driver/detect_pallet_obstacles', PointCloud2),
+              TopicConfig('camera_floor_left/driver/detect_rack_obstacles', PointCloud2),
+              # TODO /camera_floor_left/driver/extrinsics/depth_to_color [realsense2_camera/Extrinsics]
+              TopicConfig('camera_floor_left/driver/parameter_descriptions', ConfigDescription),
+              TopicConfig('camera_floor_left/driver/parameter_updates', Config),
+              TopicConfig('camera_floor_left/driver/visualization_marker', MarkerArray),
+              TopicConfig('camera_floor_left/filter/parameter_descriptions', ConfigDescription),
+              TopicConfig('camera_floor_left/filter/parameter_updates', Config),
+              TopicConfig('camera_floor_left/filter/visualization_marker', MarkerArray),
+              TopicConfig('camera_floor_left/floor', PointCloud2),
+              TopicConfig('camera_floor_left/obstacles', PointCloud2),
+              #  TopicConfig('camera_floor_left/transform/parameter_descriptions', ConfigDescription),
+              #  TopicConfig('camera_floor_left/transform/parameter_updates', Config),
+              TopicConfig('camera_floor_right/background', PointCloud2),
+              TopicConfig('camera_floor_right/driver/color/camera_info', CameraInfo),
+              TopicConfig('camera_floor_right/driver/color/image_raw', Image),
+              TopicConfig('camera_floor_right/driver/color/image_raw/compressed', CompressedImage),
+              TopicConfig('camera_floor_right/driver/color/image_raw/compressed/parameter_descriptions', ConfigDescription),
+              TopicConfig('camera_floor_right/driver/color/image_raw/compressed/parameter_updates', Config),
+              TopicConfig('camera_floor_right/driver/depth/camera_info', CameraInfo),
+              TopicConfig('camera_floor_right/driver/depth/color/points', PointCloud2),
+              TopicConfig('camera_floor_right/driver/depth/image_rect_raw', Image),
+              TopicConfig('camera_floor_right/driver/depth/image_rect_raw/compressed', CompressedImage),
+              TopicConfig('camera_floor_right/driver/depth/image_rect_raw/compressed/parameter_descriptions', ConfigDescription),
+              TopicConfig('camera_floor_right/driver/depth/image_rect_raw/compressed/parameter_updates', Config),
+              TopicConfig('camera_floor_right/driver/detect_pallet_obstacles', PointCloud2),
+              TopicConfig('camera_floor_right/driver/detect_rack_obstacles', PointCloud2),
+              # TODO /camera_floor_right/driver/extrinsics/depth_to_color [realsense2_camera/Extrinsics]
+              TopicConfig('camera_floor_right/driver/parameter_descriptions', ConfigDescription),
+              TopicConfig('camera_floor_right/driver/parameter_updates', Config),
+              TopicConfig('camera_floor_right/driver/visualization_marker', MarkerArray),
+              TopicConfig('camera_floor_right/filter/parameter_descriptions', ConfigDescription),
+              TopicConfig('camera_floor_right/filter/parameter_updates', Config),
+              TopicConfig('camera_floor_right/filter/visualization_marker', MarkerArray),
+              TopicConfig('camera_floor_right/floor', PointCloud2),
+              TopicConfig('camera_floor_right/obstacles', PointCloud2),
+              #  TopicConfig('camera_floor_right/transform/parameter_descriptions', ConfigDescription),
+              #  TopicConfig('camera_floor_right/transform/parameter_updates', Config),
               TopicConfig('check_area/polygon', PolygonStamped),
               TopicConfig('diagnostics', DiagnosticArray),
               TopicConfig('diagnostics_agg', DiagnosticArray),
@@ -130,22 +171,23 @@ PUB_TOPICS = [
               TopicConfig('imu_data', Imu),  # not available in simulation
               TopicConfig('laser_back/driver/parameter_descriptions', ConfigDescription),
               TopicConfig('laser_back/driver/parameter_updates', Config),
-              TopicConfig('laser_back/transform/parameter_descriptions', ConfigDescription),
-              TopicConfig('laser_back/transform/parameter_updates', Config),
+              #TopicConfig('laser_back/transform/parameter_descriptions', ConfigDescription),
+              #TopicConfig('laser_back/transform/parameter_updates', Config),
               TopicConfig('laser_front/driver/parameter_descriptions', ConfigDescription),
               TopicConfig('laser_front/driver/parameter_updates', Config),
-              TopicConfig('laser_front/transform/parameter_descriptions', ConfigDescription),
-              TopicConfig('laser_front/transform/parameter_updates', Config),
+              #TopicConfig('laser_front/transform/parameter_descriptions', ConfigDescription),
+              #TopicConfig('laser_front/transform/parameter_updates', Config),
               TopicConfig('map', OccupancyGrid, latch=True),
               TopicConfig('map_metadata', MapMetaData),
               TopicConfig('mir_amcl/parameter_descriptions', ConfigDescription),
               TopicConfig('mir_amcl/parameter_updates', Config),
               TopicConfig('mir_amcl/selected_points', PointCloud2),
               TopicConfig('mir_log', Log),
-              TopicConfig('mir_serial_button', Serial),
-              TopicConfig('mir_sound', String),
-              TopicConfig('mir_status', MirStatus),
+              #TopicConfig('mir_serial_button', Serial),
+              #TopicConfig('mir_sound', String),
+              #TopicConfig('mir_status', MirStatus),
               TopicConfig('mir_status_msg', String),
+              TopicConfig('mir_cmd', String),
 #              TopicConfig('mirspawn/node_events', LaunchItem),
               TopicConfig('mirwebapp/grid_map_metadata', LocalMapStat),
               TopicConfig('mirwebapp/laser_map_metadata', LocalMapStat),
@@ -181,40 +223,50 @@ PUB_TOPICS = [
 #              TopicConfig('move_base_node/mir_escape_recovery/visualization_marker', Marker),
 #              TopicConfig('move_base_node/parameter_descriptions', ConfigDescription),
 #              TopicConfig('move_base_node/parameter_updates', Config),
-              TopicConfig('odom_comb', Odometry),    # odom_comb on real robot, odom on simulator
+              TopicConfig('odom', Odometry),    # odom_comb on real robot, odom on simulator
               TopicConfig('odom_enc', Odometry),
-              TopicConfig('particlecloud', PoseArray),
-              TopicConfig('relative_move_action/feedback', RelativeMoveActionFeedback),
-              TopicConfig('relative_move_action/result', RelativeMoveActionResult),
-              TopicConfig('relative_move_action/status', GoalStatusArray),
-              TopicConfig('relative_move_node/parameter_descriptions', ConfigDescription),
-              TopicConfig('relative_move_node/parameter_updates', Config),
-              TopicConfig('relative_move_node/time_to_coll', Float64),
-              TopicConfig('relative_move_node/visualization_marker', Marker),
+              TopicConfig('one_way_map', OccupancyGrid),
+              TopicConfig('param_update', String),
+              TopicConfig('particlevizmarker', MarkerArray),
+              #TopicConfig('particlecloud', PoseArray),
+              #TopicConfig('relative_move_action/feedback', RelativeMoveActionFeedback),
+              #TopicConfig('relative_move_action/result', RelativeMoveActionResult),
+              #TopicConfig('relative_move_action/status', GoalStatusArray),
+              #TopicConfig('relative_move_node/parameter_descriptions', ConfigDescription),
+              #TopicConfig('relative_move_node/parameter_updates', Config),
+              #TopicConfig('relative_move_node/time_to_coll', Float64),
+              #TopicConfig('relative_move_node/visualization_marker', Marker),
               TopicConfig('robot_mode', RobotMode),
               TopicConfig('robot_pose', Pose),
               TopicConfig('robot_state', RobotState),
               TopicConfig('rosout', Log),
               TopicConfig('rosout_agg', Log),
               TopicConfig('scan', LaserScan),
+              TopicConfig('scan_filter/parameter_descriptions', ConfigDescription),
+              TopicConfig('scan_filter/parameter_updates', Config),
               TopicConfig('scan_filter/visualization_marker', Marker),
-              TopicConfig('tf', tfMessage, dict_filter=_tf_dict_filter),
-              TopicConfig('transform_footprint/parameter_descriptions', ConfigDescription),
-              TopicConfig('transform_footprint/parameter_updates', Config),
-              TopicConfig('transform_imu/parameter_descriptions', ConfigDescription),
-              TopicConfig('transform_imu/parameter_updates', Config)]
+              TopicConfig('tf', TFMessage),
+              TopicConfig('tf_static', TFMessage),
+              TopicConfig('traffic_map', OccupancyGrid)]
+              #TopicConfig('tf', tfMessage, dict_filter=_tf_dict_filter),
+              #TopicConfig('transform_footprint/parameter_descriptions', ConfigDescription),
+              #TopicConfig('transform_footprint/parameter_updates', Config),
+              #TopicConfig('transform_imu/parameter_descriptions', ConfigDescription),
+              #TopicConfig('transform_imu/parameter_updates', Config)]
 
 # topics we want to subscribe to from ROS (and publish to the MiR)
-SUB_TOPICS = [TopicConfig('cmd_vel', Twist),
+SUB_TOPICS = [#TopicConfig('cmd_vel', Twist),
+              TopicConfig('cmd_vel', TwistStamped)
               TopicConfig('initialpose', PoseWithCovarianceStamped),
               TopicConfig('light_cmd', String),
               TopicConfig('mir_cmd', String),
               TopicConfig('move_base/cancel', GoalID),
 ##              TopicConfig('move_base/goal', MirMoveBaseActionGoal),
               TopicConfig('move_base/goal', MoveBaseActionGoal),  # really mir_actions/MirMoveBaseActionGoal
-              TopicConfig('move_base_simple/goal', PoseStamped),
-              TopicConfig('relative_move_action/cancel', GoalID),
-              TopicConfig('relative_move_action/goal', RelativeMoveActionGoal)]
+              TopicConfig('move_base_simple/goal', PoseStamped) ]
+              #TopicConfig('move_base_simple/goal', PoseStamped),
+              #TopicConfig('relative_move_action/cancel', GoalID),
+              #TopicConfig('relative_move_action/goal', RelativeMoveActionGoal)]
 
 class PublisherWrapper(rospy.SubscribeListener):
     def __init__(self, topic_config, robot):
