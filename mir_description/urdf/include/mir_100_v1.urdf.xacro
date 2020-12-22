@@ -233,7 +233,7 @@
 
     <link name="${prefix}depth_camera_frame" />
 
-    <xacro:_d415 prefix="${prefix}" link="camera_frame" topic="/camera"/>
+    <xacro:d_camera prefix="${prefix}" link="camera_frame" topic="/camera"/>
     
     <!-- UV light -->
 
