@@ -1,0 +1,15 @@
+topics:
+- name    : joy
+  topic   : joy_teleop/cmd_vel
+  timeout : 0.5
+  priority: 10
+- name    : general_cmd_vel
+  topic   : cmd_vel
+  timeout : 0.5
+  priority: 8
+
+locks:
+- name    : soft_estop
+  topic   : /mission_manager/estop
+  timeout : 0.0
+  priority: 255

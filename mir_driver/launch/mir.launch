@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <launch>
   <arg name="tf_prefix" default="" doc="TF prefix to use for all of MiR's TF frames"/>
 
