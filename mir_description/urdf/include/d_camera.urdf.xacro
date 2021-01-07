@@ -13,14 +13,14 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/visual/d415.stl" />
+          <mesh filename="package://mir_description/meshes/visual/intel_r200.stl" />
         </geometry>
         <xacro:insert_block name="material_black" />
       </visual>
       <collision>
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://mir_description/meshes/visual/d415.stl" />
+          <mesh filename="package://mir_description/meshes/visual/intel_r200.stl" />
         </geometry>
       </collision>
       <xacro:box_inertial x="${camera_x}" y="${camera_y}" z="${camera_z}" mass="${camera_mass}">
